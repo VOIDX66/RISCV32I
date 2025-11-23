@@ -12,15 +12,18 @@ SRC_DIR = src
 TB_DIR = tb
 WAVE_FILE = wave.vcd
 
-# Módulo Principal del Procesador (Se actualizará cuando se cree el top)
-TOP_MODULE = riscv_top
+# Módulo Principal del Procesador
+TOP_MODULE = riscv
 TOP_TB = $(TB_DIR)/tb_$(TOP_MODULE).sv
-TOP_BIN = $(TOP_MODULE).vvp
+
+# Directorio y rutas de simulación del TOP
+TOP_SIM_DIR = sim/$(TOP_MODULE)
+TOP_VVP = $(TOP_SIM_DIR)/$(TOP_MODULE).vvp
+TOP_VCD = $(TOP_SIM_DIR)/$(WAVE_FILE)
 
 # ------------------------------------------------------------------------------
 # Regla para asegurar que los directorios existan
 # ------------------------------------------------------------------------------
-# Directorios: src, tb, sim, docs
 DIRS = $(SRC_DIR) $(TB_DIR) sim docs
 $(shell mkdir -p $(DIRS))
 
@@ -30,27 +33,26 @@ default: help
 
 # ------------------------------------------------------------------------------
 # Regla para el Módulo Principal (make run)
-# Los archivos de salida (.vvp y .vcd) se quedan en la raíz del proyecto.
+# Ahora guarda TODO en sim/riscv/ como pediste
 # ------------------------------------------------------------------------------
-run: $(TOP_BIN)
+run: $(TOP_VVP)
 	@echo "======================================================================"
 	@echo " Ejecutando la simulación del módulo principal: $(TOP_MODULE) "
-	@echo " VCD/VVP de salida: Raíz del proyecto "
+	@echo " Directorio de salida: $(TOP_SIM_DIR)/ "
 	@echo "======================================================================"
-	$(VVP) $<
-	$(GTKWAVE) $(WAVE_FILE) &
+	cd $(TOP_SIM_DIR) && $(VVP) $(TOP_MODULE).vvp
+	$(GTKWAVE) $(TOP_VCD) &
 
-$(TOP_BIN): $(TOP_TB) $(SRC_DIR)/*.sv
+$(TOP_VVP): $(TOP_TB) $(SRC_DIR)/*.sv
 	@echo "Compilando módulo principal y todos los módulos fuente..."
-	# ¡IMPORTANTE!: Usar -g2012 para habilitar la sintaxis de SystemVerilog
-	$(IVERILOG) -g2012 -o $@ $^ $(SRC_DIR)/*.sv
+	mkdir -p $(TOP_SIM_DIR)
+	$(IVERILOG) -g2012 -o $(TOP_VVP) $^
 
 # ------------------------------------------------------------------------------
 # Regla Genérica para Testbenches de Módulos (make sim_<modulo>)
-# Las salidas (.vvp y .vcd) se guardan en sim/<modulo_nombre>/.
+# Las salidas (.vvp y .vcd) se guardan en sim/<modulo_nombre>/
 # ------------------------------------------------------------------------------
 sim_%:
-	# Convertimos el nombre del módulo ($*) a minúsculas
 	$(eval MOD_NAME := $(shell echo $* | tr '[:upper:]' '[:lower:]'))
 	$(eval MOD_SIM_DIR := sim/$(MOD_NAME))
 	$(eval VVP_PATH := $(MOD_SIM_DIR)/tb_$(MOD_NAME).vvp)
@@ -60,26 +62,19 @@ sim_%:
 	@echo " Directorio de salida: $(MOD_SIM_DIR)/ "
 	@echo "======================================================================"
 
-	# 1. Crear el directorio de simulación específico
 	mkdir -p $(MOD_SIM_DIR)
 
-	# 2. Copiar archivos auxiliares necesarios (program.hex) al directorio de simulación
-	# RUTA CORREGIDA: Se busca el archivo dentro de src/
 	cp src/program.hex $(MOD_SIM_DIR)/
 
-	# 3. Compila el módulo específico y su testbench
 	$(IVERILOG) -g2012 -o $(VVP_PATH) $(TB_DIR)/tb_$(MOD_NAME).sv $(SRC_DIR)/$(MOD_NAME).sv
 
-	# 4. Ejecuta la simulación (se cambia al directorio para que 'wave.vcd' se cree allí)
 	@echo "Ejecutando $(VVP) en $(MOD_SIM_DIR)/"
-	# El 'cd' se ejecuta en una subshell y el 'vvp' crea el wave.vcd dentro de esa carpeta.
 	cd $(MOD_SIM_DIR) && $(VVP) tb_$(MOD_NAME).vvp
-	
-	# 5. Abre GTKWave, apuntando al archivo VCD dentro del directorio
+
 	$(GTKWAVE) $(MOD_SIM_DIR)/$(WAVE_FILE) &
 
 # ------------------------------------------------------------------------------
-# Regla 'sim' de advertencia (para evitar el uso incorrecto como 'make sim alu')
+# Regla de advertencia para evitar uso incorrecto
 # ------------------------------------------------------------------------------
 sim:
 	@echo "======================================================================"
@@ -90,16 +85,12 @@ sim:
 	@exit 1
 
 # ------------------------------------------------------------------------------
-# Otras Reglas
+# Limpieza de archivos generados
 # ------------------------------------------------------------------------------
 clean:
 	@echo "Limpiando archivos de simulación (.vvp y .vcd)..."
-	# Limpieza de archivos en la raíz (para 'make run')
-	rm -f $(TOP_BIN) $(WAVE_FILE)
-	# Limpieza de archivos VVP generados en tb/ (Formato antiguo)
+	rm -rf sim/*
 	rm -f $(TB_DIR)/*.vvp
-	# Limpieza de archivos de simulación de módulos en sim/*
-	rm -rf sim/*/*.vvp sim/*/*.vcd
 	@echo "Archivos temporales eliminados."
 
 help:
@@ -108,7 +99,7 @@ help:
 	@echo "======================================================================"
 	@echo " Comandos disponibles: "
 	@echo "   make run                  -> Simula el procesador principal ($(TOP_MODULE))"
-	@echo "   make sim_<modulo_nombre>  -> Simula el testbench de un módulo específico (Ej: make sim_alu)"
-	@echo "   make clean                -> Limpia los archivos generados de la simulación (.vvp y .vcd)"
+	@echo "   make sim_<modulo_nombre>  -> Simula un módulo específico"
+	@echo "   make clean                -> Limpia los archivos generados"
 	@echo "   make help                 -> Muestra esta ayuda"
 	@echo "----------------------------------------------------------------------"
