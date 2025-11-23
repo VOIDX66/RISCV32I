@@ -5,9 +5,6 @@
 // Se actualiza en el flanco positivo del reloj (síncrono).
 // ==============================================================================
 
-`timescale 1ns / 1ps
-`default_nettype none
-
 module PC (
 	input  logic        clk,     // Reloj del sistema
 	input  logic        reset,   // Señal de reset activo alto

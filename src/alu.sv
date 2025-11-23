@@ -4,9 +4,6 @@
 // Diseño: Monociclo (combinacional puro).
 // ==============================================================================
 
-`timescale 1ns / 1ps
-`default_nettype none // Buena práctica: previene la inferencia accidental de nets
-
 module ALU(
     // Entradas
     input  logic signed [31:0] A,        // Operando A (generalmente rs1)

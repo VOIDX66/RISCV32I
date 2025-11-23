@@ -15,9 +15,6 @@
 //      instrucciones están alineadas a 4 bytes.
 // ==============================================================================
 
-`timescale 1ns / 1ps
-`default_nettype none
-
 module INSTRUCTION_MEMORY (
   input  logic [31:0] Address,      // Dirección del PC
   output logic [31:0] Instruction   // Instrucción leída
