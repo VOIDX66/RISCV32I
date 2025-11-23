@@ -1,0 +1,86 @@
+$date
+	Sun Nov 23 17:47:10 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_BRANCH_UNIT $end
+$var wire 1 ! NextPCSrc $end
+$var reg 5 " BrOp [4:0] $end
+$var reg 32 # rs1 [31:0] $end
+$var reg 32 $ rs2 [31:0] $end
+$scope module dut $end
+$var wire 5 % BrOp [4:0] $end
+$var wire 32 & rs1 [31:0] $end
+$var wire 32 ' rs2 [31:0] $end
+$var reg 1 ! NextPCSrc $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b101 '
+b101 &
+b1000 %
+b101 $
+b101 #
+b1000 "
+1!
+$end
+#10000
+1!
+b1001 "
+b1001 %
+b111 $
+b111 '
+#20000
+1!
+b1100 "
+b1100 %
+b11 $
+b11 '
+b11111111111111111111111111111011 #
+b11111111111111111111111111111011 &
+#30000
+1!
+b1101 "
+b1101 %
+b11111111111111111111111111111111 $
+b11111111111111111111111111111111 '
+b1010 #
+b1010 &
+#40000
+1!
+b1110 "
+b1110 %
+b11111111111111111111111100000000 $
+b11111111111111111111111100000000 '
+b1 #
+b1 &
+#50000
+1!
+b1111 "
+b1111 %
+b1 $
+b1 '
+b11111111111111111111111100000000 #
+b11111111111111111111111100000000 &
+#60000
+1!
+b10000 "
+b10000 %
+#70000
+0!
+b111001000 $
+b111001000 '
+b1111011 #
+b1111011 &
+b0 "
+b0 %
+#80000
