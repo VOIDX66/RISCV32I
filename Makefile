@@ -63,15 +63,19 @@ sim_%:
 	# 1. Crear el directorio de simulación específico
 	mkdir -p $(MOD_SIM_DIR)
 
-	# 2. Compila el módulo específico y su testbench
+	# 2. Copiar archivos auxiliares necesarios (program.hex) al directorio de simulación
+	# RUTA CORREGIDA: Se busca el archivo dentro de src/
+	cp src/program.hex $(MOD_SIM_DIR)/
+
+	# 3. Compila el módulo específico y su testbench
 	$(IVERILOG) -g2012 -o $(VVP_PATH) $(TB_DIR)/tb_$(MOD_NAME).sv $(SRC_DIR)/$(MOD_NAME).sv
 
-	# 3. Ejecuta la simulación (se cambia al directorio para que 'wave.vcd' se cree allí)
+	# 4. Ejecuta la simulación (se cambia al directorio para que 'wave.vcd' se cree allí)
 	@echo "Ejecutando $(VVP) en $(MOD_SIM_DIR)/"
 	# El 'cd' se ejecuta en una subshell y el 'vvp' crea el wave.vcd dentro de esa carpeta.
 	cd $(MOD_SIM_DIR) && $(VVP) tb_$(MOD_NAME).vvp
 	
-	# 4. Abre GTKWave, apuntando al archivo VCD dentro del directorio
+	# 5. Abre GTKWave, apuntando al archivo VCD dentro del directorio
 	$(GTKWAVE) $(MOD_SIM_DIR)/$(WAVE_FILE) &
 
 # ------------------------------------------------------------------------------

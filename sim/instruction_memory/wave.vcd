@@ -1,0 +1,64 @@
+$date
+	Sun Nov 23 15:48:56 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_instruction_memory $end
+$var wire 32 ! Instruction_out [31:0] $end
+$var parameter 32 " ADDRESS_DELAY $end
+$var reg 32 # Address_in [31:0] $end
+$scope module DUT $end
+$var wire 32 $ Address [31:0] $end
+$var wire 32 % Instruction [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b11110 "
+$end
+#0
+$dumpvars
+b1000000000000000000000100010011 %
+b0 $
+b0 #
+b1000000000000000000000100010011 !
+$end
+#30000
+b100000000000010100010011 !
+b100000000000010100010011 %
+b100 #
+b100 $
+#60000
+b1000000000000000011101111 !
+b1000000000000000011101111 %
+b1000 #
+b1000 $
+#90000
+b100000000001100010011 !
+b100000000001100010011 %
+b101000 #
+b101000 $
+#120000
+b101001 #
+b101001 $
+#150000
+b101000010100010011 !
+b101000010100010011 %
+b1110100 #
+b1110100 $
+#180000
+b1000000001100111 !
+b1000000001100111 %
+b1111000 #
+b1111000 $
+#210000
+bx !
+bx %
+b1100100000 #
+b1100100000 $
+#240000
