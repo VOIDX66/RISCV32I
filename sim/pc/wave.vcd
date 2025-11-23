@@ -1,0 +1,99 @@
+$date
+	Sun Nov 23 15:35:11 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_pc $end
+$var wire 32 ! PC_out [31:0] $end
+$var parameter 32 " CLK_PERIOD $end
+$var reg 32 # NextPC_in [31:0] $end
+$var reg 1 $ clk $end
+$var reg 1 % reset $end
+$scope module DUT $end
+$var wire 32 & NextPC [31:0] $end
+$var wire 1 $ clk $end
+$var wire 1 % reset $end
+$var reg 32 ' PC [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b1010 "
+$end
+#0
+$dumpvars
+b0 '
+b1100 &
+1%
+0$
+b1100 #
+b0 !
+$end
+#5000
+b100 !
+b100 '
+0%
+b100 #
+b100 &
+1$
+#10000
+0$
+#15000
+b1000 !
+b1000 '
+1$
+b1000 #
+b1000 &
+#20000
+0$
+#25000
+1$
+#30000
+0$
+#35000
+b1100 !
+b1100 '
+1$
+b1100 #
+b1100 &
+#40000
+0$
+#45000
+b10000000000000000000000000000 !
+b10000000000000000000000000000 '
+1$
+b10000000000000000000000000000 #
+b10000000000000000000000000000 &
+#50000
+0$
+#55000
+b10000000000000000000000000100 !
+b10000000000000000000000000100 '
+1$
+b10000000000000000000000000100 #
+b10000000000000000000000000100 &
+#60000
+0$
+#65000
+1$
+#70000
+0$
+#75000
+1$
+#80000
+0$
+#85000
+1$
+#90000
+0$
+#95000
+1$
+#100000
+0$
+#105000
+1$
