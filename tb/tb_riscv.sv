@@ -18,7 +18,7 @@ module riscv_tb;
   logic reset;
 
   // Señales de debug opcionales
-  logic [31:0] PC_out;
+  logic [31:0] INST_out;
   logic [31:0] ALURes_out;
 
   // ============================
@@ -27,7 +27,7 @@ module riscv_tb;
   RISCV dut (
     .clk(clk),
     .reset(reset),
-    .PC_out(PC_out),
+    .INST_out(INST_out),
     .ALURes_out(ALURes_out)
   );
 

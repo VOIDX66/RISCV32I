@@ -23,7 +23,7 @@
 module RISCV (
     input  logic clk,          // reloj del CPU (pulsos manuales)
     input  logic reset,        // reset global (KEY0)
-    output logic [31:0] PC_out,        // PC visible para debug
+    output logic [31:0] INST_out,        // PC visible para debug
     output logic [31:0] ALURes_out     // resultado ALU para debug
 );
 
@@ -222,7 +222,7 @@ module RISCV (
   // ------------------------------------------------------------
   // Señales exportadas al wrapper (para LEDs o displays).
   // ============================================================
-  assign PC_out      = PC;
+  assign INST_out      = Instruction;
   assign ALURes_out  = ALURes;
 
 endmodule

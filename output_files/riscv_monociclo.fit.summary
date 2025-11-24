@@ -1,13 +1,13 @@
-Fitter Status : Successful - Sun Nov 23 18:33:41 2025
+Fitter Status : Successful - Mon Nov 24 16:43:36 2025
 Quartus Prime Version : 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 Revision Name : riscv_monociclo
-Top-level Entity Name : RISCV
+Top-level Entity Name : top_wrapper
 Family : Cyclone V
 Device : 5CSEMA5F31C6
 Timing Models : Final
-Logic utilization (in ALMs) : 6,389 / 32,070 ( 20 % )
-Total registers : 9404
-Total pins : 66 / 457 ( 14 % )
+Logic utilization (in ALMs) : 6,352 / 32,070 ( 20 % )
+Total registers : 9385
+Total pins : 46 / 457 ( 10 % )
 Total virtual pins : 0
 Total block memory bits : 0 / 4,065,280 ( 0 % )
 Total RAM Blocks : 0 / 397 ( 0 % )

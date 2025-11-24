@@ -1,5 +1,5 @@
 Flow report for riscv_monociclo
-Sun Nov 23 20:03:19 2025
+Mon Nov 24 16:44:24 2025
 Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 
 
@@ -38,24 +38,29 @@ on the Quartus Prime software download page.
 
 
 
-+-------------------------------------------------------------------------------+
-; Flow Summary                                                                  ;
-+-----------------------------+-------------------------------------------------+
-; Flow Status                 ; Successful - Sun Nov 23 20:03:19 2025           ;
-; Quartus Prime Version       ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
-; Revision Name               ; riscv_monociclo                                 ;
-; Top-level Entity Name       ; top_wrapper                                     ;
-; Family                      ; Cyclone V                                       ;
-; Device                      ; 5CSEMA5F31C6                                    ;
-; Timing Models               ; Final                                           ;
-; Logic utilization (in ALMs) ; N/A until Partition Merge                       ;
-; Total registers             ; N/A until Partition Merge                       ;
-; Total pins                  ; N/A until Partition Merge                       ;
-; Total virtual pins          ; N/A until Partition Merge                       ;
-; Total block memory bits     ; N/A until Partition Merge                       ;
-; Total PLLs                  ; N/A until Partition Merge                       ;
-; Total DLLs                  ; N/A until Partition Merge                       ;
-+-----------------------------+-------------------------------------------------+
++-----------------------------------------------------------------------------------+
+; Flow Summary                                                                      ;
++---------------------------------+-------------------------------------------------+
+; Flow Status                     ; Successful - Mon Nov 24 16:44:24 2025           ;
+; Quartus Prime Version           ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
+; Revision Name                   ; riscv_monociclo                                 ;
+; Top-level Entity Name           ; top_wrapper                                     ;
+; Family                          ; Cyclone V                                       ;
+; Device                          ; 5CSEMA5F31C6                                    ;
+; Timing Models                   ; Final                                           ;
+; Logic utilization (in ALMs)     ; 6,352 / 32,070 ( 20 % )                         ;
+; Total registers                 ; 9385                                            ;
+; Total pins                      ; 46 / 457 ( 10 % )                               ;
+; Total virtual pins              ; 0                                               ;
+; Total block memory bits         ; 0 / 4,065,280 ( 0 % )                           ;
+; Total DSP Blocks                ; 0 / 87 ( 0 % )                                  ;
+; Total HSSI RX PCSs              ; 0                                               ;
+; Total HSSI PMA RX Deserializers ; 0                                               ;
+; Total HSSI TX PCSs              ; 0                                               ;
+; Total HSSI PMA TX Serializers   ; 0                                               ;
+; Total PLLs                      ; 0 / 6 ( 0 % )                                   ;
+; Total DLLs                      ; 0 / 4 ( 0 % )                                   ;
++---------------------------------+-------------------------------------------------+
 
 
 +-----------------------------------------+
@@ -63,7 +68,7 @@ on the Quartus Prime software download page.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 11/23/2025 20:03:11 ;
+; Start date & time ; 11/24/2025 16:38:04 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; riscv_monociclo     ;
 +-------------------+---------------------+
@@ -74,7 +79,7 @@ on the Quartus Prime software download page.
 +-------------------------------------+----------------------------------------+-----------------+-------------+-----------------------------------+
 ; Assignment Name                     ; Value                                  ; Default Value   ; Entity Name ; Section Id                        ;
 +-------------------------------------+----------------------------------------+-----------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 88798056284025.176394619103643         ; --              ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID               ; 88798056284025.176402028454245         ; --              ; --          ; --                                ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --              ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --              ; --          ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --              ; --          ; eda_board_design_signal_integrity ;
@@ -94,29 +99,41 @@ on the Quartus Prime software download page.
 +-------------------------------------+----------------------------------------+-----------------+-------------+-----------------------------------+
 
 
-+----------------------------------------------------------------------------------------------------------------------------+
-; Flow Elapsed Time                                                                                                          ;
-+------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Module Name            ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
-+------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Elaboration ; 00:00:09     ; 1.0                     ; 805 MB              ; 00:00:17                           ;
-; Total                  ; 00:00:09     ; --                      ; --                  ; 00:00:17                           ;
-+------------------------+--------------+-------------------------+---------------------+------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------+
+; Flow Elapsed Time                                                                                                        ;
++----------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
++----------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Analysis & Synthesis ; 00:01:29     ; 1.2                     ; 691 MB              ; 00:01:55                           ;
+; Fitter               ; 00:04:01     ; 1.6                     ; 2667 MB             ; 00:10:52                           ;
+; Assembler            ; 00:00:10     ; 1.0                     ; 605 MB              ; 00:00:09                           ;
+; Timing Analyzer      ; 00:00:27     ; 5.6                     ; 1271 MB             ; 00:02:00                           ;
+; EDA Netlist Writer   ; 00:00:05     ; 1.0                     ; 764 MB              ; 00:00:05                           ;
+; Total                ; 00:06:12     ; --                      ; --                  ; 00:15:01                           ;
++----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
-+--------------------------------------------------------------------------------------+
-; Flow OS Summary                                                                      ;
-+------------------------+------------------+------------+------------+----------------+
-; Module Name            ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
-+------------------------+------------------+------------+------------+----------------+
-; Analysis & Elaboration ; archvoid         ; Arch Linux ; Arch Linux ; x86_64         ;
-+------------------------+------------------+------------+------------+----------------+
++------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                    ;
++----------------------+------------------+------------+------------+----------------+
+; Module Name          ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
++----------------------+------------------+------------+------------+----------------+
+; Analysis & Synthesis ; archvoid         ; Arch Linux ; Arch Linux ; x86_64         ;
+; Fitter               ; archvoid         ; Arch Linux ; Arch Linux ; x86_64         ;
+; Assembler            ; archvoid         ; Arch Linux ; Arch Linux ; x86_64         ;
+; Timing Analyzer      ; archvoid         ; Arch Linux ; Arch Linux ; x86_64         ;
+; EDA Netlist Writer   ; archvoid         ; Arch Linux ; Arch Linux ; x86_64         ;
++----------------------+------------------+------------+------------+----------------+
 
 
 ------------
 ; Flow Log ;
 ------------
-quartus_map --read_settings_files=on --write_settings_files=off riscv_monociclo -c riscv_monociclo --analysis_and_elaboration
+quartus_map --read_settings_files=on --write_settings_files=off riscv_monociclo -c riscv_monociclo
+quartus_fit --read_settings_files=off --write_settings_files=off riscv_monociclo -c riscv_monociclo
+quartus_asm --read_settings_files=off --write_settings_files=off riscv_monociclo -c riscv_monociclo
+quartus_sta riscv_monociclo -c riscv_monociclo
+quartus_eda --read_settings_files=off --write_settings_files=off riscv_monociclo -c riscv_monociclo
 
 
 

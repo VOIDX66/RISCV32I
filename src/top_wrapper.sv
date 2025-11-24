@@ -46,13 +46,13 @@ module top_wrapper (
   // Instancia del RISC-V CORE
   // Las wires se declaran aquí para que sean accesibles en el Testbench (tb.dut.debug_PC)
   // -------------------------------------------------------
-  wire [31:0] debug_PC;
+  wire [31:0] debug_INST;
   wire [31:0] debug_ALU;
 
   RISCV cpu (
     .clk(step_pulse),        
     .reset(reset),
-    .PC_out(debug_PC),
+    .INST_out(debug_INST),
     .ALURes_out(debug_ALU)
     // Conectar otros puertos como Instrucción, Registros, etc. si es necesario
   );
@@ -64,7 +64,7 @@ module top_wrapper (
 
   // SW = 1 (Arriba) -> Muestra PC
   // SW = 0 (Abajo) -> Muestra ALURes
-  assign selected24 = (SW) ? debug_PC[23:0] : debug_ALU[23:0];
+  assign selected24 = (SW) ? debug_INST[23:0] : debug_ALU[23:0];
 
   // -------------------------------------------------------
   // Dividir la palabra de 24 bits en 6 nibbles (4 bits cada uno)
@@ -80,30 +80,39 @@ module top_wrapper (
   // Función de fuente 7 segmentos (Decodificador BCD a 7-Segmentos)
   // -------------------------------------------------------
   function automatic [6:0] font7;
-    input [3:0] v;
-    begin
-      case (v)
-        4'h0: font7 = 7'b1111110; 4'h1: font7 = 7'b0110000;
-        4'h2: font7 = 7'b1101101; 4'h3: font7 = 7'b1111001;
-        4'h4: font7 = 7'b0110011; 4'h5: font7 = 7'b1011011;
-        4'h6: font7 = 7'b1011111; 4'h7: font7 = 7'b1110000;
-        4'h8: font7 = 7'b1111111; 4'h9: font7 = 7'b1111011;
-        4'hA: font7 = 7'b1110111; 4'hB: font7 = 7'b0011111;
-        4'hC: font7 = 7'b1001110; 4'hD: font7 = 7'b0111101;
-        4'hE: font7 = 7'b1001111; 4'hF: font7 = 7'b1000111;
-        default: font7 = 7'b0000000;
-      endcase
-    end
-  endfunction
-
+  input [3:0] v;
+	  begin
+		 // Mapeo: [Seg 6, Seg 5, Seg 4, Seg 3, Seg 2, Seg 1, Seg 0]
+		 // 0 = ON, 1 = OFF (Cátodo Común, según tu diagrama)
+		 case (v)
+			4'h0: font7 = 7'b1000000; // 0 (0,1,2,3,4,5 ON)
+			4'h1: font7 = 7'b1111001; // 1 (1,2 ON)
+			4'h2: font7 = 7'b0100100; // 2 (0,1,6,4,3 ON)
+			4'h3: font7 = 7'b0110000; // 3 (0,1,2,3,6 ON)
+			4'h4: font7 = 7'b0011001; // 4 (1,2,5,6 ON)
+			4'h5: font7 = 7'b0010010; // 5 (0,2,3,5,6 ON)
+			4'h6: font7 = 7'b0000010; // 6 (0,2,3,4,5,6 ON)
+			4'h7: font7 = 7'b1111000; // 7 (0,1,2 ON)
+			4'h8: font7 = 7'b0000000; // 8 (Todos ON)
+			4'h9: font7 = 7'b0011000; // 9 (0,1,2,3,5,6 ON)
+			4'hA: font7 = 7'b0001000; // A (0,1,2,4,5,6 ON)
+			4'hB: font7 = 7'b0000011; // b (f,e,d,c,g ON, Seg 5,4,3,2,6)
+			4'hC: font7 = 7'b1000110; // C (a,f,e,d ON, Seg 0,5,4,3)
+			4'hD: font7 = 7'b0100001; // d (b,c,d,e,g ON, Seg 1,2,3,4,6)
+			4'hE: font7 = 7'b0000110; // E (0,3,4,5,6 ON)
+			4'hF: font7 = 7'b0001110; // F (0,4,5,6 ON)
+			default: font7 = 7'b1111111; // Apagado total (Todos OFF)
+		 endcase
+	  end
+	endfunction
   // -------------------------------------------------------
   // ASIGNACIÓN FINAL DE SALIDAS (Inversión para Ánodo Común)
   // -------------------------------------------------------
-  assign HEX0 = ~font7(nib0);
-  assign HEX1 = ~font7(nib1);
-  assign HEX2 = ~font7(nib2);
-  assign HEX3 = ~font7(nib3);
-  assign HEX4 = ~font7(nib4);
-  assign HEX5 = ~font7(nib5);
+  assign HEX0 = font7(nib0);
+  assign HEX1 = font7(nib1);
+  assign HEX2 = font7(nib2);
+  assign HEX3 = font7(nib3);
+  assign HEX4 = font7(nib4);
+  assign HEX5 = font7(nib5);
 
 endmodule

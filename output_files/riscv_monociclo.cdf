@@ -3,8 +3,10 @@ JedecChain;
 	FileRevision(JESD32A);
 	DefaultMfr(6E);
 
+	P ActionCode(Ign)
+		Device PartName(5CSEMA5F31) MfrSpec(OpMask(0));
 	P ActionCode(Cfg)
-		Device PartName(5CSEMA5F31) Path("/home/void/Documentos/Github/Arquitectura-Computadores/riscvmonociclo/output_files/") File("riscv_monociclo.sof") MfrSpec(OpMask(1));
+		Device PartName(5CSEMA5F31) Path("/home/void/Documentos/Github/RISCV32I/output_files/") File("riscv_monociclo.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 
