@@ -22,6 +22,21 @@ module DATA_MEMORY (
   assign word_index = Address[31:2];
 
   // ============================================================
+  // Cálculo de índices y offsets para Icarus (pre-cálculo)
+  // ============================================================
+  // Desplazamiento de bytes (0, 8, 16, 24)
+  logic [4:0] byte_offset_start;
+  assign byte_offset_start = Address[1:0] * 8; // Address[1:0] * 8
+
+  // Desplazamiento de halfwords (0, 16)
+  logic [4:0] half_word_offset_start;
+  assign half_word_offset_start = Address[1] * 16; // Address[1] * 16
+
+  // Palabra leída combinacionalmente
+  logic [31:0] temp_word;
+  assign temp_word = memory[word_index];
+
+  // ============================================================
   // Inicialización interna (sin archivos externos)
   // ============================================================
   initial begin
@@ -29,9 +44,9 @@ module DATA_MEMORY (
     for (i = 0; i < 256; i = i + 1)
       memory[i] = 32'b0;
 
-    // Si deseas precargar algunos datos:
-    // memory[0] = 32'h00000010;
-    // memory[1] = 32'hAABBCCDD;
+    // Precargar algunos datos:
+    memory[0] = 32'h00000010;
+    memory[1] = 32'hAABBCCDD;
   end
 
   // ============================================================
@@ -40,13 +55,13 @@ module DATA_MEMORY (
   always_ff @(posedge clk) begin
     if (DMWr) begin
       case (DMCtrl)
-        3'b000, 3'b100: begin // Byte
-          memory[word_index][(Address[1:0]*8)+:8] <= DataWr[7:0];
+        3'b000, 3'b100: begin // Byte (SB/LB/LBU)
+          memory[word_index][byte_offset_start +: 8] <= DataWr[7:0];
         end
-        3'b001, 3'b101: begin // Halfword
-          memory[word_index][(Address[1]*16)+:16] <= DataWr[15:0];
+        3'b001, 3'b101: begin // Halfword (SH/LH/LHU)
+          memory[word_index][half_word_offset_start +: 16] <= DataWr[15:0];
         end
-        3'b010: begin // Word
+        3'b010: begin // Word (SW/LW)
           memory[word_index] <= DataWr;
         end
       endcase
@@ -56,16 +71,23 @@ module DATA_MEMORY (
   // ============================================================
   // Lectura combinacional
   // ============================================================
-  logic [31:0] temp_word;
-  assign temp_word = memory[word_index];
-
   always_comb begin
     case (DMCtrl)
-      3'b000: DataRd = {{24{temp_word[(Address[1:0]*8+7)]}}, temp_word[(Address[1:0]*8)+:8]};  // Byte (signed)
-      3'b001: DataRd = {{16{temp_word[(Address[1]*16+15)]}}, temp_word[(Address[1]*16)+:16]}; // Halfword (signed)
-      3'b010: DataRd = temp_word;                                                              // Word
-      3'b100: DataRd = {24'b0, temp_word[(Address[1:0]*8)+:8]};                               // Byte (unsigned)
-      3'b101: DataRd = {16'b0, temp_word[(Address[1]*16)+:16]};                               // Halfword (unsigned)
+      // LB: Byte con extensión de signo
+      3'b000: DataRd = {{24{temp_word[byte_offset_start + 7]}}, temp_word[byte_offset_start +: 8]};
+      
+      // LH: Halfword con extensión de signo
+      3'b001: DataRd = {{16{temp_word[half_word_offset_start + 15]}}, temp_word[half_word_offset_start +: 16]}; 
+      
+      // LW: Word
+      3'b010: DataRd = temp_word;                                                              
+      
+      // LBU: Byte sin extensión (unsigned)
+      3'b100: DataRd = {24'b0, temp_word[byte_offset_start +: 8]};                               
+      
+      // LHU: Halfword sin extensión (unsigned)
+      3'b101: DataRd = {16'b0, temp_word[half_word_offset_start +: 16]};                               
+      
       default: DataRd = 32'b0;
     endcase
   end

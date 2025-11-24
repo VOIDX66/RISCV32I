@@ -27,13 +27,13 @@ TOP_VCD = $(TOP_SIM_DIR)/$(WAVE_FILE)
 DIRS = $(SRC_DIR) $(TB_DIR) sim docs
 $(shell mkdir -p $(DIRS))
 
-.PHONY: all default clean run help sim sim_%
+.PHONY: all default clean run help sim sim_% test_fpga
 
 default: help
 
 # ------------------------------------------------------------------------------
 # Regla para el Módulo Principal (make run)
-# Ahora guarda TODO en sim/riscv/ como pediste
+# Ahora guarda TODO en sim/riscv/
 # ------------------------------------------------------------------------------
 run: $(TOP_VVP)
 	@echo "======================================================================"
@@ -50,7 +50,6 @@ $(TOP_VVP): $(TOP_TB) $(SRC_DIR)/*.sv
 
 # ------------------------------------------------------------------------------
 # Regla Genérica para Testbenches de Módulos (make sim_<modulo>)
-# Las salidas (.vvp y .vcd) se guardan en sim/<modulo_nombre>/
 # ------------------------------------------------------------------------------
 sim_%:
 	$(eval MOD_NAME := $(shell echo $* | tr '[:upper:]' '[:lower:]'))
@@ -63,15 +62,25 @@ sim_%:
 	@echo "======================================================================"
 
 	mkdir -p $(MOD_SIM_DIR)
-
 	cp src/program.hex $(MOD_SIM_DIR)/
 
 	$(IVERILOG) -g2012 -o $(VVP_PATH) $(TB_DIR)/tb_$(MOD_NAME).sv $(SRC_DIR)/$(MOD_NAME).sv
-
-	@echo "Ejecutando $(VVP) en $(MOD_SIM_DIR)/"
 	cd $(MOD_SIM_DIR) && $(VVP) tb_$(MOD_NAME).vvp
-
 	$(GTKWAVE) $(MOD_SIM_DIR)/$(WAVE_FILE) &
+
+# ------------------------------------------------------------------------------
+# Nueva regla: test_fpga para top_wrapper
+# ------------------------------------------------------------------------------
+test_fpga:
+	@echo "======================================================================"
+	@echo " Simulando el top_wrapper con step-by-step y displays HEX "
+	@echo " Directorio de salida: sim/top_wrapper/ "
+	@echo "======================================================================"
+	mkdir -p sim/top_wrapper
+	# Excluir top_wrapper.v de src/*.sv
+	$(IVERILOG) -g2012 -o sim/top_wrapper/top_wrapper.vvp tb/tb_top_wrapper.sv $(filter-out $(SRC_DIR)/top_wrapper.sv, $(wildcard $(SRC_DIR)/*.sv)) $(SRC_DIR)/top_wrapper.sv
+	cd sim/top_wrapper && $(VVP) top_wrapper.vvp
+	$(GTKWAVE) sim/top_wrapper/$(WAVE_FILE) &
 
 # ------------------------------------------------------------------------------
 # Regla de advertencia para evitar uso incorrecto
@@ -100,6 +109,7 @@ help:
 	@echo " Comandos disponibles: "
 	@echo "   make run                  -> Simula el procesador principal ($(TOP_MODULE))"
 	@echo "   make sim_<modulo_nombre>  -> Simula un módulo específico"
+	@echo "   make test_fpga            -> Simula el top_wrapper con step y HEXs"
 	@echo "   make clean                -> Limpia los archivos generados"
 	@echo "   make help                 -> Muestra esta ayuda"
 	@echo "----------------------------------------------------------------------"
